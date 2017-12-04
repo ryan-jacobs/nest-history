@@ -15,6 +15,9 @@
 
 namespace Libs\MysqliDb;
 
+use ReflectionClass;
+use mysqli_stmt;
+
 
 class MysqliDb
 {

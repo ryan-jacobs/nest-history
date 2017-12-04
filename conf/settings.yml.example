@@ -1,2 +1,12 @@
-nest_user: username
-nest_pass: password
+nest:
+  username: ****
+  password: ****
+db:
+  host: localhost
+  username: ****
+  password: ****
+  db: ****
+  # Optional db connection settings
+  # port: 3306
+  # prefix: my_
+  # charset: utf8
