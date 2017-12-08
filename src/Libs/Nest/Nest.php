@@ -148,8 +148,13 @@ class Nest
         }
 
         return (object) array(
+            'outside_temperature_c' => isset($weather->now->current_temperature) ? $weather->now->current_temperature : NULL,
             'outside_temperature' => isset($weather->now->current_temperature) ? $this->temperatureInUserScale((float) $weather->now->current_temperature) : NULL,
-            'outside_humidity'    => isset($weather->now->current_humidity) ? $weather->now->current_humidity : NULL
+            'outside_humidity'    => isset($weather->now->current_humidity) ? $weather->now->current_humidity : NULL,
+            'outside_wind'        => isset($weather->now->current_wind) ? $weather->now->current_wind : NULL,
+            'outside_wind_speed'  => isset($weather->now->current_humidity) ? $weather->now->current_humidity : NULL,
+            'outside_conditions'  => isset($weather->now->conditions) ? $weather->now->conditions : NULL,
+            'outside_conditions_icon' => isset($weather->now->icon) ? $weather->now->icon : NULL,
         );
     }
 
@@ -175,13 +180,19 @@ class Nest
 
             $weather_data = $this->getWeather($structure->postal_code, $structure->country_code);
             $user_structures[] = (object) array(
+                'id' => $struct_id,
                 'name' => isset($structure->name)?$structure->name:'',
                 'address' => !empty($structure->street_address) ? $structure->street_address : NULL,
                 'city' => $structure->location,
                 'postal_code' => $structure->postal_code,
                 'country' => $structure->country_code,
+                'outside_temperature_c' => $weather_data->outside_temperature_c,
                 'outside_temperature' => $weather_data->outside_temperature,
                 'outside_humidity' => $weather_data->outside_humidity,
+                'outside_wind' => $weather_data->outside_wind,
+                'outside_wind_speed' => $weather_data->outside_wind_speed,
+                'outside_conditions' => $weather_data->outside_conditions,
+                'outside_conditions_icon' => $weather_data->outside_conditions_icon,
                 'away' => $structure->away,
                 'away_last_changed' => date(DATETIME_FORMAT, $structure->away_timestamp),
                 'thermostats' => array_map(array($class_name, 'cleanDevices'), $structure->devices),
