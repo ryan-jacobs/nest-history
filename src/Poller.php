@@ -3,29 +3,28 @@
  * Poller utilities and tools
  */
 
-use Libs\MysqliDb\MysqliDb;
-use Libs\Nest\Nest;
+namespace rjacobs\NestHistory;
 
 class Poller {
 
   /**
    * Database object.
    *
-   * @var \Libs\MysqliDb\MysqliDb
+   * @var \MysqliDb
    */
   private $db;
 
   /**
    * Nest object.
    *
-   * @var Libs\Nest\Nest
+   * @var \Nest
    */
   private $nest;
 
   /**
    * Constructor
    */
-  public function __construct(Libs\MysqliDb\MysqliDb $db, Libs\Nest\Nest $nest) {
+  public function __construct(\MysqliDb $db, \Nest $nest) {
     $this->db = $db;
     $this->nest = $nest;
   }

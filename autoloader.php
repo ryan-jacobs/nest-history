@@ -6,30 +6,27 @@
  * @return void
  */
 spl_autoload_register(function ($class) {
-
-    // project-specific namespace prefix
-    $prefix = '';
-
-    // base directory for the namespace prefix
-    $base_dir = __DIR__ . '/src/';
-
-    // does the class use the namespace prefix?
+    $prefix = 'rjacobs\\NestHistory\\';
     $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) {
-        // no, move to the next registered autoloader
-        return;
+    $lib_map = array(
+      'Nest' => '/src/Libs/Nest/nest.class',
+      'MysqliDb' => '/src/Libs/MysqliDb/MysqliDb',
+      'Spyc' => '/src/Libs/Spyc/Spyc'
+      );
+    // Project-prefixed classes use the root src dir.
+    if (strncmp($prefix, $class, $len) === 0) {
+      $relative_class = substr($class, $len);
+      $file = __DIR__ . '/src/' . str_replace('\\', '/', $relative_class) . '.php';
     }
-
-    // get the relative class name
-    $relative_class = substr($class, $len);
-
-    // replace the namespace prefix with the base directory, replace namespace
-    // separators with directory separators in the relative class name, append
-    // with .php
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-
-    // if the file exists, require it
+    // Non-project-pefixed classes may be mapped to specific directories.
+    elseif (array_key_exists($class, $lib_map)) {
+      $file = __DIR__ . $lib_map[$class] . '.php';
+    }
+    // Otherwise move to next registered autoloader.
+    else {
+      return;
+    }
     if (file_exists($file)) {
-        require $file;
+      require $file;
     }
 });

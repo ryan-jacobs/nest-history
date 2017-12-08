@@ -3,10 +3,7 @@
  * Common utilities and tools
  */
 
-use Libs\Spyc\Spyc;
-use Libs\MysqliDb\MysqliDb;
-use Libs\Nest\Nest;
-
+namespace rjacobs\NestHistory;
 
 class Common {
   
@@ -29,7 +26,7 @@ class Common {
   public static function settings($group = NULL) {
     // Only parse settings from yaml once per request.
     if (!static::$settings) {
-      static::$settings = Spyc::YAMLLoad(realpath('conf/settings.yml'));
+      static::$settings = \Spyc::YAMLLoad(realpath('conf/settings.yml'));
     }
     if ($group) {
       return isset(static::$settings[$group]) ? static::$settings[$group] : NULL;
@@ -40,7 +37,7 @@ class Common {
   /**
    * Get database object.
    *
-   * @return \Libs\MysqliDb\MysqliDb
+   * @return \MysqliDb
    *   The master database object initiated with global connection settings.
    */
   public static function db() {
@@ -48,18 +45,18 @@ class Common {
       'port' => 3306,
       'prefix' => '',
       'charset' => 'utf8');
-    return new MySqliDb($db_settings);
+    return new \MysqliDb($db_settings);
  }
  
   /**
    * Get nest object.
    *
-   * @return \Libs\MysqliDb\MysqliDb
+   * @return \Nest
    *   The master nest object initiated with credentials.
    */
   public static function nest() {
     $nest_settings = self::settings('nest');
-    return new Nest($nest_settings['username'], $nest_settings['password']);
+    return new \Nest($nest_settings['username'], $nest_settings['password']);
   }
   
   /**

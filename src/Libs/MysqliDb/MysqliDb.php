@@ -13,12 +13,6 @@
  * @version   2.9.1
  */
 
-namespace Libs\MysqliDb;
-
-use ReflectionClass;
-use Exception;
-use mysqli_stmt;
-
 
 class MysqliDb
 {

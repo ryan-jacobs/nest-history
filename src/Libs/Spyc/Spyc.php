@@ -1,6 +1,5 @@
 <?php
 
-namespace Libs\Spyc;
 
 /**
    * Spyc -- A Simple PHP YAML Class

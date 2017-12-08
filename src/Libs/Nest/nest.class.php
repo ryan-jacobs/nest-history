@@ -1,9 +1,5 @@
 <?php
 
-namespace Libs\Nest;
-use RuntimeException;
-use InvalidArgumentException;
-
 define('DATE_FORMAT', 'Y-m-d');
 define('DATETIME_FORMAT', DATE_FORMAT . ' H:i:s');
 define('TARGET_TEMP_MODE_COOL', 'cool');
