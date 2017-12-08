@@ -5,6 +5,7 @@
 
 use Libs\Spyc\Spyc;
 use Libs\MysqliDb\MysqliDb;
+use Libs\Nest\Nest;
 
 
 class Common {
@@ -15,13 +16,6 @@ class Common {
    * @var array
    */
   static private $settings = array();
-  
-  /**
-   * Instatntiated db object used for static caching purposes.
-   *
-   * @var \Libs\MysqliDb\MysqliDb
-   */
-  static private $db;
 
   /**
    * Get global settings.
@@ -50,15 +44,31 @@ class Common {
    *   The master database object initiated with global connection settings.
    */
   public static function db() {
-    // Only initiate the db once per request.
-    if (!static::$db) {
-      $db_settings = self::settings('db') + array(
-        'port' => 3306,
-        'prefix' => '',
-        'charset' => 'utf8');
-      static::$db = new MySqliDb($db_settings);
-    }
-    return static::$db;
+    $db_settings = self::settings('db') + array(
+      'port' => 3306,
+      'prefix' => '',
+      'charset' => 'utf8');
+    return new MySqliDb($db_settings);
  }
-
+ 
+  /**
+   * Get nest object.
+   *
+   * @return \Libs\MysqliDb\MysqliDb
+   *   The master nest object initiated with credentials.
+   */
+  public static function nest() {
+    $nest_settings = self::settings('nest');
+    return new Nest($nest_settings['username'], $nest_settings['password']);
+  }
+  
+  /**
+   * Get poller object.
+   *
+   * @return Poller
+   *   The poller utility.
+   */
+   public static function poller() {
+     return new Poller(self::db(), self::nest());
+   }
 }

@@ -16,6 +16,7 @@
 namespace Libs\MysqliDb;
 
 use ReflectionClass;
+use Exception;
 use mysqli_stmt;
 
 
