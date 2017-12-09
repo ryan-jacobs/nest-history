@@ -6,5 +6,6 @@ require_once('autoloader.php');
 
 $poller = Common::poller();
 $poller->pollConf();
-print 'done!';
+$poller->pollStructures();
+$poller->pollThermostats();
 exit();

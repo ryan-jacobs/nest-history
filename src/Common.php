@@ -6,7 +6,7 @@
 namespace rjacobs\NestHistory;
 
 class Common {
-  
+
   /**
    * Loaded settings used for static caching purposes.
    *
@@ -26,7 +26,7 @@ class Common {
   public static function settings($group = NULL) {
     // Only parse settings from yaml once per request.
     if (!static::$settings) {
-      static::$settings = \Spyc::YAMLLoad(realpath('conf/settings.yml'));
+      static::$settings = \Spyc::YAMLLoad(realpath(__DIR__ . '/../conf/settings.yml'));
     }
     if ($group) {
       return isset(static::$settings[$group]) ? static::$settings[$group] : NULL;
@@ -47,7 +47,7 @@ class Common {
       'charset' => 'utf8');
     return new \MysqliDb($db_settings);
  }
- 
+
   /**
    * Get nest object.
    *
@@ -58,7 +58,7 @@ class Common {
     $nest_settings = self::settings('nest');
     return new \Nest($nest_settings['username'], $nest_settings['password']);
   }
-  
+
   /**
    * Get poller object.
    *
