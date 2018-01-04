@@ -181,7 +181,6 @@ class Nest
                 'city' => $structure->location,
                 'postal_code' => $structure->postal_code,
                 'country' => $structure->country_code,
-                'outside_temperature_c' => $weather_data->outside_temperature_c,
                 'outside_temperature' => $weather_data->outside_temperature,
                 'outside_humidity' => $weather_data->outside_humidity,
                 'outside_wind' => $weather_data->outside_wind,

@@ -116,11 +116,12 @@ class Poller {
           'eco_temp_high' => $this->temp($state->eco_temperatures->high, $thermostat->serial_number),
           'eco_temp_low' => $this->temp($state->eco_temperatures->low, $thermostat->serial_number),
           'target_mode' => $thermostat->target->mode,
-          'target_temperature' => $this->temp($thermostat->target->temperature, $thermostat->serial_number),
-          'target_time' => $thermostat->target->time_to_target,
+          'target_temperature' => is_numeric($thermostat->target->temperature) ? $this->temp($thermostat->target->temperature, $thermostat->serial_number) : 0,
+          'target_time' => isset($thermostat->target->time_to_target) ? $thermostat->target->time_to_target : 0,
+          'target_humidity' => !empty($thermostat->target->humidity_enabled) ? $thermostat->target->humidity : 0,
           'polled' => $this->db->now()
         );
-        foreach (array('heat', 'alt_heat', 'ac', 'fan', 'auto_away', 'manual_away', 'humidity', 'leaf', 'mode', 'battery_level') as $field) {
+        foreach (array('heat', 'alt_heat', 'ac', 'fan', 'auto_away', 'manual_away', 'humidifier', 'humidity', 'leaf', 'mode', 'battery_level') as $field) {
           $data[$field] = $state->{$field};
         }
         $id = $this->db->insert('thermostat_status', $data);
@@ -188,5 +189,5 @@ class Poller {
     }
     return $temp;
   }
-
+  
 }

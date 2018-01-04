@@ -9,6 +9,7 @@ CREATE TABLE `thermostat_status` (
 	`auto_away` int NOT NULL,
 	`manual_away` int NOT NULL,
 	`leaf` int NOT NULL,
+  `humidifier` int NOT NULL,
 	`humidity` int NOT NULL,
 	`mode` varchar(32) NOT NULL,
 	`battery_level` FLOAT NOT NULL,
@@ -17,6 +18,7 @@ CREATE TABLE `thermostat_status` (
 	`target_mode` varchar(32) NOT NULL,
 	`target_temperature` FLOAT NOT NULL,
 	`target_time` int NOT NULL,
+  `target_humidity` FLOAT NOT NULL,
 	`polled` TIMESTAMP NOT NULL,
 	PRIMARY KEY (`id`)
 );
