@@ -45,6 +45,9 @@ class Poller {
 
   /**
    * Poll base structure and device conf.
+   *
+   * This method will poll BOTH the structure conf and the thermostat conf and
+   * capture any updates in the structures and thermostats tables respectively.
    */
   public function pollConf() {
     $structures = $this->getStructures();
@@ -81,6 +84,10 @@ class Poller {
 
   /**
    * Poll current structure status.
+   *
+   * This method will poll BOTH the structure status and the thermostat status
+   * for each device within a structure and write the results to new records
+   * in structure_status and thermostat_status tables respectively.
    */
   public function pollStructures() {
     foreach ($this->getStructures() as $structure) {
@@ -89,26 +96,35 @@ class Poller {
       if ($structure_db) {
         $data = array(
           'structure_id' => $structure_db['id'],
-          'temperature' => $this->temp($structure->outside_temperature),
-          'away' => $structure->away,
+          'outside_temperature' => $this->temp($structure->outside_temperature),
+          'structure_away' => $structure->away,
           'polled' => $this->db->now(),
         );
-        foreach (array('conditions', 'conditions_icon', 'humidity', 'wind', 'wind_speed') as $field) {
-          $data[$field] = $structure->{'outside_' . $field};
+        foreach (array('outside_conditions', 'outside_conditions_icon', 'outside_humidity', 'outside_wind', 'outside_wind_speed') as $field) {
+          $data[$field] = $structure->{$field};
         }
         $id = $this->db->insert('structure_status', $data);
+        // Poll the thermostats for this structure.
         $this->pollThermostats($structure_db['id'], $id);
       }
     }
   }
 
   /**
-   * Poll current device status.
+   * Poll current device status for a given thermostat.
+   *
+   * @param int $structure_id
+   *   The structure id containing the thermostats to poll.
+   * @param int $structure_status_id
+   *   The id of the structure_status record that the resulting thermostat
+   *   status records should be linked to. This allows structure and thermostat
+   *   data to be tied to a common discrete polling request.
    */
-  public function pollThermostats($structure_id, $structure_status_id) {
+  protected function pollThermostats($structure_id, $structure_status_id) {
     foreach ($this->getThermostats() as $thermostat) {
       $state = $thermostat->current_state;
-      // Get internal id for this device.
+      // Verify that we are tracking this device and that it is within the
+      // structure requested. If so, get the internal ID.
       $thermostat_db = $this->db
           ->where('serial', $thermostat->serial_number)
           ->where('structure_id', $structure_id)
@@ -194,5 +210,5 @@ class Poller {
     }
     return $temp;
   }
-  
+
 }

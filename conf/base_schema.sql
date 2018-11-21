@@ -49,13 +49,13 @@ CREATE TABLE `structures` (
 CREATE TABLE `structure_status` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`structure_id` int NOT NULL,
-	`temperature` FLOAT NOT NULL,
-	`conditions` varchar(32) NOT NULL,
-	`conditions_icon` varchar(32) NOT NULL,
-	`humidity` int NOT NULL,
-	`wind` int NOT NULL,
-	`wind_speed` int NOT NULL,
-	`away` int NOT NULL,
+	`outside_temperature` FLOAT NOT NULL,
+	`outside_conditions` varchar(32) NOT NULL,
+	`outside_conditions_icon` varchar(32) NOT NULL,
+	`outside_humidity` int NOT NULL,
+	`outside_wind` int NOT NULL,
+	`outside_wind_speed` int NOT NULL,
+	`structure_away` int NOT NULL,
 	`polled` TIMESTAMP NOT NULL,
 	PRIMARY KEY (`id`)
 );
