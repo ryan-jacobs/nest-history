@@ -103,6 +103,8 @@ class Poller {
         foreach (array('outside_conditions', 'outside_conditions_icon', 'outside_humidity', 'outside_wind', 'outside_wind_speed') as $field) {
           $data[$field] = $structure->{$field};
         }
+        // Dew point is calculated based on other fetched datapoints.
+        $data['outside_dew_point'] = $this->dewPoint($data['outside_temperature'], $data['outside_humidity']);
         $id = $this->db->insert('structure_status', $data);
         // Poll the thermostats for this structure.
         $this->pollThermostats($structure_db['id'], $id);
@@ -145,6 +147,8 @@ class Poller {
         foreach (array('heat', 'alt_heat', 'ac', 'fan', 'auto_away', 'manual_away', 'humidifier', 'humidity', 'leaf', 'mode', 'battery_level') as $field) {
           $data[$field] = $state->{$field};
         }
+        // Dew point is calculated based on other fetched datapoints.
+        $data['dew_point'] = $this->dewPoint($data['temperature'], $data['humidity']);
         $id = $this->db->insert('thermostat_status', $data);
       }
     }
@@ -209,6 +213,22 @@ class Poller {
       $temp = 5/9 * ($temp - 32);
     }
     return $temp;
+  }
+
+
+  /**
+   * Utility to get dew point based on celsius temperature and percent relative
+   * humidity.
+   *
+   * @param float $temp
+   *   The temperature specified in celsius.
+   * @param int $humidity
+   *   Percent relative humidith value
+   * @return float
+   *   The dew point in celsius.
+   */
+  private function dewPoint($temp, $humidity) {
+    return round(((pow(($humidity/100), 0.125))*(112+0.9*$temp)+(0.1*$temp)-112),1);
   }
 
 }
