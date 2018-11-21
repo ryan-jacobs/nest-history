@@ -1,6 +1,7 @@
 CREATE TABLE `thermostat_status` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`thermostat_id` int NOT NULL,
+  `structure_status_id` int NOT NULL,
 	`temperature` FLOAT NOT NULL,
 	`heat` int NOT NULL,
 	`alt_heat` int NOT NULL,
@@ -67,6 +68,8 @@ CREATE TABLE `variables` (
 );
 
 ALTER TABLE `thermostat_status` ADD CONSTRAINT `thermostat_status_fk0` FOREIGN KEY (`thermostat_id`) REFERENCES `thermostats`(`id`);
+
+ALTER TABLE `thermostat_status` ADD CONSTRAINT `thermostat_status_fk1` FOREIGN KEY (`structure_status_id`) REFERENCES `structure_status`(`id`);
 
 ALTER TABLE `thermostats` ADD CONSTRAINT `thermostats_fk0` FOREIGN KEY (`structure_id`) REFERENCES `structures`(`id`);
 

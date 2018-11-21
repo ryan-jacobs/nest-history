@@ -97,6 +97,7 @@ class Poller {
           $data[$field] = $structure->{'outside_' . $field};
         }
         $id = $this->db->insert('structure_status', $data);
+        $this->pollThermostats($structure_db['id'], $id);
       }
     }
   }
@@ -104,14 +105,18 @@ class Poller {
   /**
    * Poll current device status.
    */
-  public function pollThermostats() {
+  public function pollThermostats($structure_id, $structure_status_id) {
     foreach ($this->getThermostats() as $thermostat) {
       $state = $thermostat->current_state;
       // Get internal id for this device.
-      $thermostat_db = $this->db->where('serial', $thermostat->serial_number)->getOne('thermostats');
+      $thermostat_db = $this->db
+          ->where('serial', $thermostat->serial_number)
+          ->where('structure_id', $structure_id)
+          ->getOne('thermostats');
       if ($thermostat_db) {
         $data = array(
           'thermostat_id' => $thermostat_db['id'],
+          'structure_status_id' => $structure_status_id,
           'temperature' => $this->temp($state->temperature, $thermostat->serial_number),
           'eco_temp_high' => $this->temp($state->eco_temperatures->high, $thermostat->serial_number),
           'eco_temp_low' => $this->temp($state->eco_temperatures->low, $thermostat->serial_number),
