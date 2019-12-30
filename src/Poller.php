@@ -141,10 +141,12 @@ class Poller {
           'target_mode' => $thermostat->target->mode,
           'target_temperature' => is_numeric($thermostat->target->temperature) ? $this->temp($thermostat->target->temperature, $thermostat->serial_number) : 0,
           'target_time' => isset($thermostat->target->time_to_target) ? $thermostat->target->time_to_target : 0,
+          // Humidity-related values dependent on humidity_enabled property.
           'target_humidity' => !empty($thermostat->target->humidity_enabled) ? $thermostat->target->humidity : 0,
+          'humidifier' => !empty($thermostat->target->humidity_enabled) ? $state->humidifier : 0,
           'polled' => $this->db->now()
         );
-        foreach (array('heat', 'alt_heat', 'ac', 'fan', 'auto_away', 'manual_away', 'humidifier', 'humidity', 'leaf', 'mode', 'battery_level') as $field) {
+        foreach (array('heat', 'alt_heat', 'ac', 'fan', 'auto_away', 'manual_away', 'humidity', 'leaf', 'mode', 'battery_level') as $field) {
           $data[$field] = $state->{$field};
         }
         // Dew point is calculated based on other fetched datapoints.
